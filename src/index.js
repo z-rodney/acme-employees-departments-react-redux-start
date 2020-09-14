@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+//when using react-redux, the provider makes the redux store available to the react components
+//so the base app component has to be wrapped in the provider component, which is included in react-redux
+import { Provider } from 'react-redux';
+
+import store from './store'
 
 import Departments from './Departments';
 import Stats from './Stats';
@@ -8,10 +13,8 @@ import Stats from './Stats';
 class App extends React.Component{
   constructor(){
     super();
-    this.state = {
-      departments: [],
-      employees: []
-    };
+    this.state = store.getState()
+
     this.destroyEmployee = this.destroyEmployee.bind(this);
     this.removeFromDepartment = this.removeFromDepartment.bind(this);
   }
@@ -26,6 +29,7 @@ class App extends React.Component{
     this.setState({ employees });
   }
   async componentDidMount(){
+
     const responses = await Promise.all([
       axios.get('/api/employees'),
       axios.get('/api/departments'),
@@ -35,6 +39,12 @@ class App extends React.Component{
       departments: responses[1].data
     });
   }
+
+  componentDidMount(){
+
+  }
+
+
   render(){
     const { departments, employees } = this.state;
     const { destroyEmployee, removeFromDepartment } = this;
@@ -53,4 +63,6 @@ class App extends React.Component{
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<Provider store={store}>
+    <App />
+  </Provider>, document.querySelector('#root'));

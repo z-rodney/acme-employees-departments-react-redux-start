@@ -5,7 +5,8 @@ const Employees = ({ department, employees, removeFromDepartment, destroyEmploye
   return (
       <ul>
         {
-          employees.filter( employee => employee.departmentId === (department ? department.id : null )).map( employee => <Employee employee={ employee } removeFromDepartment={ removeFromDepartment } destroyEmployee={ destroyEmployee } key={ employee.id }/>)
+          employees.filter( employee => employee.departmentId === (department ? department.id : null )).map( employee =>
+          <Employee employee={ employee } removeFromDepartment={ removeFromDepartment } destroyEmployee={ destroyEmployee } key={ employee.id }/>)
         }
       </ul>
   );
