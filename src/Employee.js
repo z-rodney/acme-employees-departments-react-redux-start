@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'react-redux'
-import { removeEmployeeDepartment } from './store'
+import { removeEmployeeDepartment, fireEmployee } from './store'
 
 const Employee = (props //{ employee, destroyEmployee, removeFromDepartment }
   )=> {
@@ -8,9 +9,9 @@ const Employee = (props //{ employee, destroyEmployee, removeFromDepartment }
   return (
     <li key={ id }>
       { name }
-      <button onClick={ ()=> destroyEmployee(employee)}>x</button>
+      <button onClick={ ()=> props.fireEmployee(id)}>x</button>
       {
-        //!!removeFromDepartment &&
+        !!props.removeEmployeeDepartment &&
         (
           <button onClick={ ()=> props.removeEmployeeDepartment(id)}>Remove From Department</button>
         )
@@ -24,10 +25,21 @@ const mapStateToProps = (state, ownProps) => {
   return currentEmployee
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    removeEmployeeDepartment: function(employee){
-      dispatch(removeEmployeeDepartment(employee));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  if (ownProps.employee.departmentId) {
+    return {
+      removeEmployeeDepartment: function(employeeId){
+        dispatch(removeEmployeeDepartment(employeeId));
+      },
+      fireEmployee: function(employeeId){
+        dispatch(fireEmployee(employeeId))
+      }
+    }
+  } else {
+    return {
+      fireEmployee: function(employeeId){
+        dispatch(fireEmployee(employeeId))
+      }
     }
   }
 }

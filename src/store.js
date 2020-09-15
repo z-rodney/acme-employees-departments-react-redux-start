@@ -23,8 +23,9 @@ export const addAllDepartments = (departments) => ({
   type: ADD_ALL_DEPARTMENTS,
   departments
 })
-const fireEmployee = () => ({
-  type: FIRE_EMPLOYEE
+export const fireEmployee = (id) => ({
+  type: FIRE_EMPLOYEE,
+  id
 })
 export const removeEmployeeDepartment = (id) => ({
   type: REMOVE_EMPLOYEE_DEPARTMENT,
@@ -51,7 +52,10 @@ function reducer (state = initialState, action) {
         }
         return employee
       })
-      return {...state, employees: [...updatedEmployees]}
+      return {...state, employees: updatedEmployees}
+    case FIRE_EMPLOYEE:
+      const currentEmployees = state.employees.filter(employee => action.id !== employee.id)
+      return {...state, employees: currentEmployees}
     default:
       return state;
   }
