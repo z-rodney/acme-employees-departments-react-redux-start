@@ -11,8 +11,6 @@ import { addAllEmployees, addAllDepartments } from './store'
 import Departments from './Departments';
 import Stats from './Stats';
 
-//all the this.setStates should be removed from the component
-
 class App extends React.Component{
   constructor(){
     super();
