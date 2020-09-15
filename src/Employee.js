@@ -1,17 +1,38 @@
 import React from 'react';
+import { connect } from 'react-redux'
+import { removeEmployeeDepartment } from './store'
 
-const Employee = ({ employee, destroyEmployee, removeFromDepartment })=> {
+const Employee = (props //{ employee, destroyEmployee, removeFromDepartment }
+  )=> {
+    const { name, id } = props
   return (
-    <li key={ employee.id }>
-      { employee.name }
+    <li key={ id }>
+      { name }
       <button onClick={ ()=> destroyEmployee(employee)}>x</button>
       {
-        !!removeFromDepartment && (
-          <button onClick={ ()=> removeFromDepartment(employee)}>Remove From Department</button>
+        //!!removeFromDepartment &&
+        (
+          <button onClick={ ()=> props.removeEmployeeDepartment(id)}>Remove From Department</button>
         )
       }
     </li>
   );
 };
 
-export default Employee;
+const mapStateToProps = (state, ownProps) => {
+  const currentEmployee = state.employees.find(employee => employee.id === ownProps.employee.id)
+  return currentEmployee
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeEmployeeDepartment: function(employee){
+      dispatch(removeEmployeeDepartment(employee));
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Employee);

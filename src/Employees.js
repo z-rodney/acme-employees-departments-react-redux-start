@@ -1,5 +1,6 @@
 import React from 'react';
 import Employee from './Employee';
+import { connect } from 'react-redux';
 
 const Employees = ({ department, employees, removeFromDepartment, destroyEmployee })=> {
   return (
@@ -12,4 +13,7 @@ const Employees = ({ department, employees, removeFromDepartment, destroyEmploye
   );
 };
 
-export default Employees;
+export default connect(
+  null,
+  null
+  )(Employees);
