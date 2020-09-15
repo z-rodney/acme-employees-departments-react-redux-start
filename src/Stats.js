@@ -1,13 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
-const Stats = ({ employees })=> {
+const Stats = (props)=> {
   return (
-    <p>{ employees.length } Total Employees</p>
+    <p>{ props.length } Total Employees</p>
   );
 };
 
-export default connect(
-  null,
-  null
-)(Stats);
+const mapStateToProps = (state) => {
+  const length = state.employees.length
+  return {
+    length
+  }
+}
+
+export default connect(mapStateToProps)(Stats);

@@ -1,45 +1,63 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'react-redux'
+import axios from 'axios'
 import { removeEmployeeDepartment, fireEmployee } from './store'
 
-const Employee = (props //{ employee, destroyEmployee, removeFromDepartment }
-  )=> {
-    const { name, id } = props
-  return (
-    <li key={ id }>
-      { name }
-      <button onClick={ ()=> props.fireEmployee(id)}>x</button>
-      {
-        !!props.removeEmployeeDepartment &&
-        (
-          <button onClick={ ()=> props.removeEmployeeDepartment(id)}>Remove From Department</button>
-        )
-      }
-    </li>
-  );
-};
+class Employee extends React.Component {
+  constructor(){
+    super();
+    this.destroyEmployee = this.destroyEmployee.bind(this);
+    this.removeFromDepartment = this.removeFromDepartment.bind(this);
+  }
+
+  async destroyEmployee(employeeId){
+    try {
+      await axios.delete(`/api/employees/${employeeId}`);
+      this.props.fireEmployee(employeeId)
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  async removeFromDepartment(employeeId){
+    try {
+      await axios.put(`/api/employees/${employeeId}`, { departmentId: null})
+      this.props.removeEmployeeDepartment(employeeId)
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  render(){
+    const { name, id } = this.props
+    return (
+      <li key={ id }>
+        { name }
+        <button onClick={ ()=> this.destroyEmployee(id)}>x</button>
+        {
+          !!this.props.departmentId && (
+          <button onClick={ ()=> this.removeFromDepartment(id)}>Remove From Department</button>
+          )
+        }
+      </li>
+      );
+    }
+}
+
 
 const mapStateToProps = (state, ownProps) => {
-  const currentEmployee = state.employees.find(employee => employee.id === ownProps.employee.id)
+  const currentEmployee = state.employees.find(employee => employee.id === ownProps.employeeId)
   return currentEmployee
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  if (ownProps.employee.departmentId) {
-    return {
-      removeEmployeeDepartment: function(employeeId){
-        dispatch(removeEmployeeDepartment(employeeId));
-      },
-      fireEmployee: function(employeeId){
-        dispatch(fireEmployee(employeeId))
-      }
-    }
-  } else {
-    return {
-      fireEmployee: function(employeeId){
-        dispatch(fireEmployee(employeeId))
-      }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeEmployeeDepartment: function(employeeId){
+      dispatch(removeEmployeeDepartment(employeeId));
+    },
+    fireEmployee: function(employeeId){
+      dispatch(fireEmployee(employeeId))
     }
   }
 }

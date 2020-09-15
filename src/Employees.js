@@ -1,19 +1,25 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import Employee from './Employee';
 import { connect } from 'react-redux';
 
-const Employees = ({ department, employees, removeFromDepartment, destroyEmployee })=> {
+const Employees = (props)=> {
+  const { employees } = props
   return (
       <ul>
         {
-          employees.filter( employee => employee.departmentId === (department ? department.id : null )).map( employee =>
-          <Employee employee={ employee } removeFromDepartment={ removeFromDepartment } destroyEmployee={ destroyEmployee } key={ employee.id }/>)
+          employees.map( employee =>
+          <Employee employeeId={ employee.id } key={ employee.id }/>)
         }
       </ul>
   );
 };
 
-export default connect(
-  null,
-  null
-  )(Employees);
+const mapStateToProps = (state, ownProps) => {
+  const employees = state.employees.filter(employee => employee.departmentId === ownProps.departmentId)
+  return {
+    employees
+  }
+}
+
+export default connect(mapStateToProps)(Employees);

@@ -17,23 +17,6 @@ class App extends React.Component{
   constructor(){
     super();
     this.state = store.getState()
-    //might be able to remove these
-    this.destroyEmployee = this.destroyEmployee.bind(this);
-    this.removeFromDepartment = this.removeFromDepartment.bind(this);
-  }
-
-  //should be able to delete this
-  async destroyEmployee(employee){
-    await axios.delete(`/api/employees/${employee.id}`);
-    const employees = this.state.employees.filter(_employee => employee.id !== _employee.id);
-    this.setState({ employees });
-  }
-
-  //should be able to delete this
-  async removeFromDepartment(employee){
-    employee = (await axios.put(`/api/employees/${employee.id}`, { departmentId: null})).data;
-    //const employees = this.state.employees.map(_employee => employee.id === _employee.id ? employee : _employee);
-    //this.setState({ employees });
   }
 
   async componentDidMount(){
@@ -52,18 +35,11 @@ class App extends React.Component{
 
 
   render(){
-    const { departments, employees } = this.state;
-    const { destroyEmployee, removeFromDepartment } = this;
     return (
       <div>
         <h1>Acme Employees And Departments</h1>
-        <Stats employees={ employees }/>
-        <Departments
-          departments={ departments }
-          employees={ employees }
-          destroyEmployee = { destroyEmployee }
-          removeFromDepartment = { removeFromDepartment }
-      />
+        <Stats />
+        <Departments/>
       </div>
     );
   }

@@ -2,19 +2,16 @@ import React from 'react';
 import Department from './Department';
 import { connect } from 'react-redux'
 
-const Departments = ({ departments, employees, destroyEmployee, removeFromDepartment })=> {
+const Departments = (props)=> {
+  const { departments } = props
   return (
     <ul className='departments'>
-      <Department destroyEmployee={ destroyEmployee } employees={ employees } />
-      {
-        departments.map( department => {
+      <Department/>
+      { departments.map( department => {
           return (
             <Department
+              departmentId = { department.id }
               key = { department.id }
-              department = { department }
-              employees = { employees }
-              destroyEmployee = { destroyEmployee }
-              removeFromDepartment = { removeFromDepartment }
             />
           );
         })
@@ -22,8 +19,9 @@ const Departments = ({ departments, employees, destroyEmployee, removeFromDepart
     </ul>
   );
 }
+const mapStateToProps = (state) => {
+  const { departments } = state
+  return { departments }
+}
 
-export default connect(
-  null,
-  null
-)(Departments);
+export default connect(mapStateToProps)(Departments);
